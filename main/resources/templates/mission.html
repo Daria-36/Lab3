@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title th:text="${mission.missionCode}">Миссия</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="page narrow">
+    <a href="/" class="back">← Назад в архив</a>
+    <section class="card">
+        <p class="eyebrow">Архивная запись</p>
+        <h1 th:text="${mission.missionCode}"></h1>
+        <dl class="grid-dl">
+            <div><dt>Дата</dt><dd th:text="${mission.date ?: '—'}"></dd></div>
+            <div><dt>Локация</dt><dd th:text="${mission.location}"></dd></div>
+            <div><dt>Результат</dt><dd th:text="${mission.outcomeTitle}"></dd></div>
+            <div><dt>Ущерб</dt><dd th:text="${mission.damageCost + ' йен'}"></dd></div>
+        </dl>
+        <div th:if="${mission.curse != null}">
+            <h3>Проклятие</h3>
+            <p th:text="${mission.curse.name + ' / ' + mission.curse.threatLevel}"></p>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Формирование отчета</h2>
+        <form th:action="@{/missions/{id}/report(id=${mission.id})}" method="get" class="filters">
+            <select name="type">
+                <option th:each="type : ${reportTypes}" th:value="${type}" th:text="${type}"></option>
+            </select>
+            <button type="submit">Сформировать</button>
+            <a class="button ghost" th:href="@{/api/missions/{id}/report/download(id=${mission.id}, type='DETAILED')}">Скачать подробный TXT</a>
+        </form>
+    </section>
+
+    <section class="card two-col">
+        <div>
+            <h2>Участники</h2>
+            <ul>
+                <li th:each="s : ${mission.sorcerers}" th:text="${s.name + ' (' + s.rank + ')'}"></li>
+                <li th:if="${#lists.isEmpty(mission.sorcerers)}">—</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Техники</h2>
+            <ul>
+                <li th:each="t : ${mission.techniques}" th:text="${t.name + ' — ' + t.owner + ', ' + t.damage + ' йен'}"></li>
+                <li th:if="${#lists.isEmpty(mission.techniques)}">—</li>
+            </ul>
+        </div>
+    </section>
+</div>
+</body>
+</html>

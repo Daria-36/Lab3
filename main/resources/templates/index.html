@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Архив миссий</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <div>
+            <p class="eyebrow">Токийский магический колледж</p>
+            <h1>Архивный веб-хаб миссий</h1>
+            <p>Загрузка, нормализация, хранение и генерация отчетов из базы данных.</p>
+        </div>
+        <a class="button ghost" href="/swagger-ui.html">Swagger API</a>
+    </header>
+
+    <section class="card">
+        <h2>Загрузка миссии</h2>
+        <form method="post" action="/missions/upload" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" accept=".json,.yaml,.yml,.xml,.txt,*/*" required>
+            <button type="submit">Сохранить в архив</button>
+        </form>
+        <p class="success" th:if="${success}" th:text="${success}"></p>
+    </section>
+
+    <section class="card">
+        <div class="section-header">
+            <h2>Архив миссий</h2>
+            <form method="get" action="/" class="filters">
+                <input type="search" name="q" placeholder="Поиск по ID или локации" th:value="${query}">
+                <select name="outcome">
+                    <option value="">Все результаты</option>
+                    <option th:each="outcome : ${outcomes}"
+                            th:value="${outcome}"
+                            th:text="${outcome.displayName}"
+                            th:selected="${selectedOutcome == outcome}"></option>
+                </select>
+                <button type="submit">Найти</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата</th>
+                <th>Локация</th>
+                <th>Результат</th>
+                <th>Проклятие</th>
+                <th>Состав</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mission : ${missions}">
+                <td th:text="${mission.missionCode}"></td>
+                <td th:text="${mission.date}"></td>
+                <td th:text="${mission.location}"></td>
+                <td th:text="${mission.outcomeTitle}"></td>
+                <td><span th:text="${mission.curseName ?: '—'}"></span> <small th:text="${mission.threatLevel ?: ''}"></small></td>
+                <td th:text="${mission.sorcererCount + ' / ' + mission.techniqueCount}"></td>
+                <td><a class="button small" th:href="@{/missions/{id}(id=${mission.id})}">Открыть</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(missions)}">
+                <td colspan="7" class="empty">Архив пока пуст. Загрузите файл миссии.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>

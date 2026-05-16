@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: mission-archive-hub
+  datasource:
+    url: jdbc:h2:file:./data/mission-archive;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080

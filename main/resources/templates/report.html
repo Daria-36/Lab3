@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Отчет</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="page narrow">
+    <a th:href="@{/missions/{id}(id=${mission.id})}" class="back">← Назад к миссии</a>
+    <section class="card">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Отчет сформирован из БД</p>
+                <h1 th:text="${mission.missionCode + ' / ' + selectedType}"></h1>
+            </div>
+            <a class="button" th:href="@{/api/missions/{id}/report/download(id=${mission.id}, type=${selectedType})}">Скачать TXT</a>
+        </div>
+        <pre th:text="${report}"></pre>
+    </section>
+</div>
+</body>
+</html>
